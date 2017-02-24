@@ -130,3 +130,9 @@ void SL015M::getUID(byte* uida)
     memcpy(uida,uid,8);
 }
 
+bool SL015M::isVirtual()
+{
+    return false;
+}
+
+

@@ -244,6 +244,11 @@ boolean RR10::cmdUpdate()
 
 }
 
+bool RR10::isVirtual()
+{
+    return false;
+}
+
 
 
 

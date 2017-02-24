@@ -1,15 +1,28 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define GAMETYPE 1               //0:pop'n with card dispenser 1: pop'n, drummania(1 reader) 2:iidx/ddr sd/gf(2readers) 3:jubeat (1reader+Ledboard) 4: sdvx (1reader+ioboard) 5: ddr hd (2readers + ??? board)
+#define GAMETYPE 4               //0:pop'n with card dispenser 1: pop'n, drummania(1 reader) 2:iidx/ddr sd/gf(2readers) 3:jubeat (1reader+Ledboard) 4: sdvx (1reader+ioboard) 5: ddr hd (2readers + ??? board)
 
 #define RFID_BAUD 115200		//Baud rate for RFID Module
 
-#define RFID_MODULE1 1			//Rfid module used for reader1, 1:SL015M 2:RR10
-#define RFID_MODULE2 1			//Rfid module used for reader2, 1:SL015M 2:RR10
+#define RFID_MODULE1 1			//Rfid module used for reader1, 1:SL015M 2:RR10 3:Virtual
+#define RFID_MODULE2 1			//Rfid module used for reader2, 1:SL015M 2:RR10 3:Virtual
 
 #define SDVX_VOL_SENS 7        //Sensitivity for SDVX Volume buttons
 
+//input pins for virtual card
+#define RFID_VITURAL_1 37		
+#define RFID_VITURAL_2 38
+
+//Virtual card UID
+#define CARD_1_A 0xE0
+#define CARD_1_B 0x04
+#define CARD_1_C 0x00
+#define CARD_1_D 0x00
+#define CARD_1_E 0x00
+#define CARD_1_F 0x00
+#define CARD_1_G 0x00
+#define CARD_1_H 0x00
 
 //input pins for sdvx controls
 #define BT_FXR A0
@@ -97,4 +110,5 @@ COL C  COL B  COL A
 #define R2_SER Serial2
 
 #endif
+
 

@@ -5,6 +5,7 @@
 #include "CardDispenser.h"
 #include "RR10.h"
 #include "SL015M.h"
+#include "VirtualRfid.h"
 #include "Ddr.h"
 
 
@@ -57,7 +58,6 @@ Reader nod1;//first reader
 LedBoard nod2("LEDB");//led board
 
 #elif GAMETYPE == 4 // reader + ioboard
-
 Reader nod1;//first reader
 IoBoard nod2("KFCA");//io board
 
@@ -77,8 +77,10 @@ Ddr nod3;
 
 #if RFID_MODULE1 == 1
 SL015M mod1;
-#else
+#elif RFID_MODULE1 == 2
 RR10 mod1;
+#else
+VirtualRfid mod1;
 #endif
 
 
@@ -87,8 +89,10 @@ RR10 mod1;
 #if GAMETYPE == 2 || GAMETYPE == 5
 #if RFID_MODULE2 == 1
 SL015M mod2;
-#else
+#elif RFID_MODULE2 == 2
 RR10 mod2;
+#else
+VirtualRfid mod2;
 #endif
 #endif
 
@@ -100,84 +104,93 @@ RR10 mod2;
 //
 void setup()
 {
-    // set nodes configuration
+  // set nodes configuration
 
-    //set first rfid module
-    mod1.setPins(R1_DET,&R1_SER);
-    nod1.setRfidModule(&mod1);
+  //set first rfid module
+  mod1.setPins(R1_DET, &R1_SER);
+  if(mod1.isVirtual())
+  {
+	  mod1.setKey(RFID_VITURAL_1);
+  }
+  
+  nod1.setRfidModule(&mod1);
 
 #if GAMETYPE == 0  //pop'n music with card dispenser
 
-    nod1.setrCode("ICCA",0);
-    nod1.setkeypadpins(K1_A,K1_B,K1_C,K1_1,K1_2,K1_3,K1_4);//3cols,4rows
-    nodes[0] = &nod1;
-    nodes[1] = &nod2;
+  nod1.setrCode("ICCA", 0);
+  nod1.setkeypadpins(K1_A, K1_B, K1_C, K1_1, K1_2, K1_3, K1_4); //3cols,4rows
+  nodes[0] = &nod1;
+  nodes[1] = &nod2;
 
-    nbnodes = 2;
+  nbnodes = 2;
 
 #elif GAMETYPE == 1 //1 reader
 
-    nod1.setrCode("ICCA",0);
-    nod1.setkeypadpins(K1_A,K1_B,K1_C,K1_1,K1_2,K1_3,K1_4);//3cols,4rows
-    nodes[0] = &nod1;
+  nod1.setrCode("ICCA", 0);
+  nod1.setkeypadpins(K1_A, K1_B, K1_C, K1_1, K1_2, K1_3, K1_4); //3cols,4rows
+  nodes[0] = &nod1;
 
-    nbnodes = 1;
+  nbnodes = 1;
 
 #elif GAMETYPE == 2 //2 readers
-    //1p reader
-    nod1.setrCode("ICCA",1);
-    nod1.setkeypadpins(K1_A,K1_B,K1_C,K1_1,K1_2,K1_3,K1_4);//3cols,4rows
-    nodes[0] = &nod1;
+  //1p reader
+  nod1.setrCode("ICCA", 1);
+  nod1.setkeypadpins(K1_A, K1_B, K1_C, K1_1, K1_2, K1_3, K1_4); //3cols,4rows
+  nodes[0] = &nod1;
 
-    //set rfid module 2
-    mod2.setPins(R2_DET,&R2_SER);
-    nod2.setRfidModule(&mod2);
+  //set rfid module 2
+  mod2.setPins(R2_DET, &R2_SER);
+  if(mod2.isVirtual())
+  {
+	  mod2.setKey(RFID_VITURAL_2);
+  }
+  nod2.setRfidModule(&mod2);
 
-    //2p reader
-    nod2.setrCode("ICCA",1);
-    nod2.setkeypadpins(K2_A,K2_B,K2_C,K2_1,K2_2,K2_3,K2_4);//3cols,4rows
-    nodes[1] = &nod2;
+  //2p reader
+  nod2.setrCode("ICCA", 1);
+  nod2.setkeypadpins(K2_A, K2_B, K2_C, K2_1, K2_2, K2_3, K2_4); //3cols,4rows
+  nodes[1] = &nod2;
 
-    nbnodes = 2;
+  nbnodes = 2;
 
 #elif GAMETYPE == 3 // reader + leboard
 
-    nod1.setrCode("ICCB",2);
-    nodes[0] = &nod1;
-    nodes[1] = &nod2;
+  nod1.setrCode("ICCB", 2);
+  nodes[0] = &nod1;
+  nodes[1] = &nod2;
 
-    nbnodes = 2;
+  nbnodes = 2;
 
 
 #elif GAMETYPE == 4 // reader + ioboard
 
-    //1p reader
-    nod1.setrCode("ICCA",1);
-    nod1.setkeypadpins(K1_A,K1_B,K1_C,K1_1,K1_2,K1_3,K1_4);//3cols,4rows
-    nodes[0] = &nod1;
-    nodes[1] = &nod2;
+  //1p reader
+  nod1.setrCode("ICCA", 1);
+  nod1.setkeypadpins(K1_A, K1_B, K1_C, K1_1, K1_2, K1_3, K1_4); //3cols,4rows
+  nodes[0] = &nod1;
+  nodes[1] = &nod2;
 
-    nbnodes = 2;
+  nbnodes = 2;
 
 #else // 2readers + DDR ??? board
 
-    //1p reader
-    nod1.setrCode("ICCB",0);
-    nod1.setkeypadpins(K1_A,K1_B,K1_C,K1_1,K1_2,K1_3,K1_4);//3cols,4rows
-    nodes[0] = &nod1;
+  //1p reader
+  nod1.setrCode("ICCB", 0);
+  nod1.setkeypadpins(K1_A, K1_B, K1_C, K1_1, K1_2, K1_3, K1_4); //3cols,4rows
+  nodes[0] = &nod1;
 
-    //set rfid module 2
-    mod2.setPins(R2_DET,&R2_SER);
-    nod2.setRfidModule(&mod2);
+  //set rfid module 2
+  mod2.setPins(R2_DET, &R2_SER);
+  nod2.setRfidModule(&mod2);
 
-    //2p reader
-    nod2.setrCode("ICCB",0);
-    nod2.setkeypadpins(K2_A,K2_B,K2_C,K2_1,K2_2,K2_3,K2_4);//3cols,4rows
-    nodes[1] = &nod2;
+  //2p reader
+  nod2.setrCode("ICCB", 0);
+  nod2.setkeypadpins(K2_A, K2_B, K2_C, K2_1, K2_2, K2_3, K2_4); //3cols,4rows
+  nodes[1] = &nod2;
 
-    nodes[2] = &nod3;
+  nodes[2] = &nod3;
 
-    nbnodes = 3;
+  nbnodes = 3;
 
 
 #endif
@@ -192,27 +205,27 @@ void setup()
 //
 void loop()
 {
-    if (initDone) {
-        for (int r=0;r<nbnodes;r++)
-        {
-            nodes[r]->update();//update each node
-        }
-
-        if ((millis() - lastRecv) > 50000) {    // If no comm for 50sec, timeout
-            initDone = false;                     // Reset init
-            //digitalWrite(13, LOW);
-            Serial.end();                         // and close serial port
-        }
-    } else {
-        //if reader is not initialized
-        detRate();// Detect baud rate
-        initNodes(); //init each node
-        lastRecv = millis();
-
-        initDone = true;
-        //digitalWrite(13, HIGH);
-
+  if (initDone) {
+    for (int r = 0; r < nbnodes; r++)
+    {
+      nodes[r]->update();//update each node
     }
+
+    if ((millis() - lastRecv) > 50000) {    // If no comm for 50sec, timeout
+      initDone = false;                     // Reset init
+      //digitalWrite(13, LOW);
+      Serial.end();                         // and close serial port
+    }
+  } else {
+    //if reader is not initialized
+    detRate();// Detect baud rate
+    initNodes(); //init each node
+    lastRecv = millis();
+
+    initDone = true;
+    //digitalWrite(13, HIGH);
+
+  }
 }
 
 
@@ -222,31 +235,31 @@ void loop()
 void serialEvent() {
 
 
-    if (initDone)
+  if (initDone)
+  {
+    getRequest();
+
+    if (isRequestComplete())
     {
-        getRequest();
+      if (checkRequestChecksum() )
+      {
+        //a correct command have been received and needs to be processed
 
-        if (isRequestComplete())
+        if (request[0] == 0x00 && request[2] == 0x01) // node enumeration command
+          nodeEnum();
+        else
         {
-            if (checkRequestChecksum() )
-            {
-                //a correct command have been received and needs to be processed
-
-                if (request[0] == 0x00 && request[2] == 0x01) // node enumeration command
-                    nodeEnum();
-                else
-                {
-                    if (request[0] >= node_id  && request[0] < node_id+nbnodes)//command recipient is one of our nodes
-                        processRequest();
-                    else //if it's not for us, (cmd aimed at another node or at the host) send it to next node
-                        forwardRequest();
-                }
-
-                req_i = 0; //empty request buffer
-            }
+          if (request[0] >= node_id  && request[0] < node_id + nbnodes) //command recipient is one of our nodes
+            processRequest();
+          else //if it's not for us, (cmd aimed at another node or at the host) send it to next node
+            forwardRequest();
         }
+
+        req_i = 0; //empty request buffer
+      }
     }
-    lastRecv = millis();
+  }
+  lastRecv = millis();
 }
 
 
@@ -255,9 +268,9 @@ void serialEvent() {
 //
 void nodeEnum()
 {
-    node_id = request[5] + 1; //first node id is previous node id + 1
-    request[5] += nbnodes; //increment node count by how many nodes this board emulate.
-    sendAnswer(request); // send command to the next node
+  node_id = request[5] + 1; //first node id is previous node id + 1
+  request[5] += nbnodes; //increment node count by how many nodes this board emulate.
+  sendAnswer(request); // send command to the next node
 }
 
 
@@ -265,10 +278,10 @@ void nodeEnum()
 // Init each node
 //
 void initNodes() {
-    for (int r=0;r<nbnodes;r++)
-    {
-        nodes[r]->init();
-    }
+  for (int r = 0; r < nbnodes; r++)
+  {
+    nodes[r]->init();
+  }
 }
 
 
@@ -278,40 +291,40 @@ void initNodes() {
 //
 void getRequest()
 {
-    if (Serial.available() > 0)
+  if (Serial.available() > 0)
+  {
+    byte inByte = Serial.read();
+
+    if (inByte == 0xAA)                   // AA -> new request is coming
     {
-        byte inByte = Serial.read();
+      if (req_i == 0)
+        Serial.write(0xAA);               // send back AA if previous byte was AA too (init sequence)
 
-        if (inByte == 0xAA)                   // AA -> new request is coming
-        {
-            if (req_i == 0)
-                Serial.write(0xAA);               // send back AA if previous byte was AA too (init sequence)
-
-            escByte = false;
-            req_i = 0;                          // clear request buffer
-        }
-
-        if (inByte == 0xFF)                   // if FF, this means next byte is an escaped byte
-        {
-            escByte = true;
-        }
-
-
-        if (inByte != 0xFF && inByte != 0xAA) // if the value is not AA nor FF, add it to the request buffer
-        {
-            if (escByte)                        // if this is an escaped byte
-            {
-                inByte = ~inByte;
-                escByte = false;
-            }
-
-            // add byte to the request buffer
-            request[req_i] = inByte;
-            req_i++;
-
-
-        }
+      escByte = false;
+      req_i = 0;                          // clear request buffer
     }
+
+    if (inByte == 0xFF)                   // if FF, this means next byte is an escaped byte
+    {
+      escByte = true;
+    }
+
+
+    if (inByte != 0xFF && inByte != 0xAA) // if the value is not AA nor FF, add it to the request buffer
+    {
+      if (escByte)                        // if this is an escaped byte
+      {
+        inByte = ~inByte;
+        escByte = false;
+      }
+
+      // add byte to the request buffer
+      request[req_i] = inByte;
+      req_i++;
+
+
+    }
+  }
 }
 
 //
@@ -319,14 +332,14 @@ void getRequest()
 //
 boolean isRequestComplete()
 {
-    if (req_i >= 6)               // check if at least minimum size
+  if (req_i >= 6)               // check if at least minimum size
+  {
+    if (req_i >= 6 + request[4]) // if long enough, including data length
     {
-        if (req_i >= 6+ request[4]) // if long enough, including data length
-        {
-            return true;
-        }
+      return true;
     }
-    return false;
+  }
+  return false;
 }
 
 //
@@ -334,25 +347,25 @@ boolean isRequestComplete()
 //
 boolean checkRequestChecksum()
 {
-    byte sum = 0;
-    int bufsize = 6 + request[4];
+  byte sum = 0;
+  int bufsize = 6 + request[4];
 
-    for (int i=0;i<bufsize-1;i++)
-    {
-        sum += request[i];
-    }
+  for (int i = 0; i < bufsize - 1; i++)
+  {
+    sum += request[i];
+  }
 
-    return (sum == request[bufsize-1]);
+  return (sum == request[bufsize - 1]);
 }
 
 //
 // get the specified Node to process the request send back the answer
 //
 void processRequest() {
-    Node *rd = nodes[request[0] - node_id];//get the node to which the command is adressed
-    byte answer[256];
-    rd->processRequest(request, answer);//have it process the request
-    sendAnswer(answer);
+  Node *rd = nodes[request[0] - node_id];//get the node to which the command is adressed
+  byte answer[256];
+  rd->processRequest(request, answer);//have it process the request
+  sendAnswer(answer);
 
 }
 
@@ -361,7 +374,7 @@ void processRequest() {
 // when a command is not for any of our nodes, send it to next node as is
 //
 void forwardRequest() {
-    sendAnswer(request);
+  sendAnswer(request);
 }
 
 
@@ -371,49 +384,49 @@ void forwardRequest() {
 //
 void sendAnswer(byte* answer)
 {
-    // checksum calculation
-    byte sum = 0;
-    int bufsize = 6 + answer[4];
+  // checksum calculation
+  byte sum = 0;
+  int bufsize = 6 + answer[4];
 
-    for (int i=0;i<bufsize-1;i++)
+  for (int i = 0; i < bufsize - 1; i++)
+  {
+    sum += answer[i];
+  }
+
+  answer[bufsize - 1] = sum;
+
+
+  //checksum calc done, let's send it
+
+  //delay if needed
+  if (GAMETYPE != 4) //delay only if game is not sound voltex
+  {
+    unsigned long now = millis();
+    if ((now - lastSent) < MINTIME && (now - lastSent) > 0)  // Check If last packet was too early
+      delay(MINTIME - (now - lastSent));                     // delay required MINTIME between 2 packets
+  }
+
+
+
+
+  Serial.write(0xAA);
+
+  for (int i = 0; i < bufsize; i++)
+  {
+    byte outByte =  answer[i];
+
+    if ( outByte == 0xAA || outByte == 0xFF ) // escape these chars
     {
-        sum += answer[i];
+      outByte = ~outByte;
+      Serial.write(0xFF);
     }
 
-    answer[bufsize-1] = sum;
+    Serial.write(outByte);
 
 
-    //checksum calc done, let's send it
+  }
 
-    //delay if needed
-    if (GAMETYPE !=4) //delay only if game is not sound voltex
-    {
-        unsigned long now = millis();
-        if ((now - lastSent) < MINTIME && (now - lastSent) > 0)  // Check If last packet was too early
-            delay(MINTIME - (now - lastSent));                     // delay required MINTIME between 2 packets
-    }
-
-
-
-
-    Serial.write(0xAA);
-
-    for (int i=0;i<bufsize;i++)
-    {
-        byte outByte =  answer[i];
-
-        if ( outByte == 0xAA || outByte == 0xFF ) // escape these chars
-        {
-            outByte = ~outByte;
-            Serial.write(0xFF);
-        }
-
-        Serial.write(outByte);
-
-
-    }
-
-    lastSent = millis();
+  lastSent = millis();
 
 
 }
@@ -423,40 +436,41 @@ void sendAnswer(byte* answer)
 //
 long detRate()
 {
-    long baudrates[] = {57600,38400,19200};//baudrates to try
-    int i=0;
-    boolean allAA;
+  long baudrates[] = {57600, 38400, 19200}; //baudrates to try
+  int i = 0;
+  boolean allAA;
 
-    do  //for each baud rate
+  do  //for each baud rate
+  {
+    i++;
+    if (i > (sizeof(baudrates) / sizeof(baudrates[0])) - 1 )
+      i = 0;
+    //flush in and out buffer
+    while (Serial.available())
+      Serial.read();
+
+    Serial.flush();
+    Serial.end();
+    Serial.begin(baudrates[i]);//try a baud rate
+
+    while (Serial.available() < 10);//wait to receive 10 bytes
+
+    //check if all byte have value 0xAA
+    allAA = true;
+    for (int j = 0; j < 10; j++)
     {
-        i++;
-        if (i> (sizeof(baudrates)/sizeof(baudrates[0])) -1 )
-            i=0;
-        //flush in and out buffer
-        while (Serial.available())
-            Serial.read();
-
-        Serial.flush();
-        Serial.end();
-        Serial.begin(baudrates[i]);//try a baud rate
-
-        while (Serial.available() < 10);//wait to receive 10 bytes
-
-        //check if all byte have value 0xAA
-        allAA = true;
-        for (int j=0;j<10;j++)
-        {
-            if (Serial.read() != 0xAA)
-            {
-                allAA = false;
-                break;
-            }
-        }
+      if (Serial.read() != 0xAA)
+      {
+        allAA = false;
+        break;
+      }
     }
-    while (!allAA);
+  }
+  while (!allAA);
 
-    //baudrate has been detected, and port is open at correct baudrate
+  //baudrate has been detected, and port is open at correct baudrate
 
-    return baudrates[i];
+  return baudrates[i];
 }
+
 

@@ -12,7 +12,10 @@ public:
     virtual void update();
     virtual byte isCardPresent();
     virtual void getUID(byte* uid);
+    virtual bool isVirtual();
+    virtual void setKey(byte key);
 };
 
 #endif
+
 
