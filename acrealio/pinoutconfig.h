@@ -5,24 +5,30 @@
 
 #define RFID_BAUD 115200		//Baud rate for RFID Module
 
-#define RFID_MODULE1 1			//Rfid module used for reader1, 1:SL015M 2:RR10 3:Virtual
-#define RFID_MODULE2 1			//Rfid module used for reader2, 1:SL015M 2:RR10 3:Virtual
+#define RFID_MODULE1 1			//Rfid module used for reader1, 1:SL015M 2:RR10 3:Virtual 4:SD card Virtual
+#define RFID_MODULE2 1			//Rfid module used for reader2, 1:SL015M 2:RR10 3:Virtual 4:SD card Virtual
 
 #define SDVX_VOL_SENS 7        //Sensitivity for SDVX Volume buttons
 
-//input pins for virtual card
-#define RFID_VITURAL_1 37		
-#define RFID_VITURAL_2 38
+//input pins for read virtual card
+#define RFID_VITURAL_1 3		
+#define RFID_VITURAL_2 4
+
+//Card file name for SD virtual rfid
+#define CARD_FILE_1 "card0.txt" 
+#define CARD_FILE_2 "card1.txt" 
+
+/*
+ ** SD card attached to SPI bus as follows(MEGA2560):
+ ** MISO - pin 50
+ ** MOSI - pin 51
+ ** CLK - pin 52
+ */
+#define SD_CS 53
 
 //Virtual card UID
-#define CARD_1_A 0xE0
-#define CARD_1_B 0x04
-#define CARD_1_C 0x00
-#define CARD_1_D 0x00
-#define CARD_1_E 0x00
-#define CARD_1_F 0x00
-#define CARD_1_G 0x00
-#define CARD_1_H 0x00
+#define CARD_1 "E004000000000000"
+#define CARD_2 "E004000000000000"
 
 //input pins for sdvx controls
 #define BT_FXR A0
@@ -31,24 +37,24 @@
 #define BT_B A3
 #define BT_C A4
 #define BT_D A5
-#define BT_START 50
-#define BT_TEST 52
-#define BT_SVC 40
+#define BT_START 46
+#define BT_TEST 48
+#define BT_SVC 54
 
 //input pins for volume encoders (phase A and phase B for each)
-#define VOLR_A 42
-#define VOLR_B 44
-#define VOLL_A 46
-#define VOLL_B 48
+#define VOLR_A 38
+#define VOLR_B 40
+#define VOLL_A 42
+#define VOLL_B 44
 
 //pins for sdvx lights (outputs)
-#define LT_START 53
-#define LT_A 51
-#define LT_B 49
-#define LT_C 47
-#define LT_D 45
-#define LT_FXL 43
-#define LT_FXR 41
+#define LT_START 49
+#define LT_A 43
+#define LT_B 41
+#define LT_C 39
+#define LT_D 37
+#define LT_FXL 45
+#define LT_FXR 47
 
 //pins for sdvx/jubeat RGB LEDs (use PWM pins)
 #define LED1_R 7

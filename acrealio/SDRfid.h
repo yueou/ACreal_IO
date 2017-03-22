@@ -1,25 +1,28 @@
-#ifndef VIRTUAL_RFID
-#define VIRTUAL_RFID
+#ifndef SD_RFID
+#define SD_RFID
 
 #include "Arduino.h"
 #include "RfidModule.h"
+#include "SD.h"
+#include "SPI.h"
 
-class VirtualRfid : public RfidModule
+class SDRfid : public RfidModule
 {
 public:
-    VirtualRfid();
+    SDRfid();
     void setPins(int sensor, HardwareSerial* serialid);
     void read();
     void update();
     byte isCardPresent();
     void getUID(byte* uid);
     bool isVirtual();
-    void setKey(byte key);
 
 private:
     byte card;               // card presence
-  	int key;
     byte uid[8];
+    int key;
+    char* fileName;
+    File cardFile;
     boolean rfcmdsent;
 
     boolean pinset;

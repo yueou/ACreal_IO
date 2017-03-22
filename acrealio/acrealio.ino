@@ -6,6 +6,7 @@
 #include "RR10.h"
 #include "SL015M.h"
 #include "VirtualRfid.h"
+#include "SDRfid.h"
 #include "Ddr.h"
 
 
@@ -79,6 +80,8 @@ Ddr nod3;
 SL015M mod1;
 #elif RFID_MODULE1 == 2
 RR10 mod1;
+#elif RFID_MODULE1 == 4
+SDRfid mod1;
 #else
 VirtualRfid mod1;
 #endif
@@ -86,11 +89,13 @@ VirtualRfid mod1;
 
 
 //2P rfid module allocation
-#if GAMETYPE == 2 || GAMETYPE == 5
+#if GAMETYPE == 2 || GAMETYPE == 5 
 #if RFID_MODULE2 == 1
 SL015M mod2;
 #elif RFID_MODULE2 == 2
 RR10 mod2;
+#elif RFID_MODULE2 == 4
+SDRfid mod2;
 #else
 VirtualRfid mod2;
 #endif
@@ -107,10 +112,12 @@ void setup()
   // set nodes configuration
 
   //set first rfid module
-  mod1.setPins(R1_DET, &R1_SER);
   if(mod1.isVirtual())
   {
-	  mod1.setKey(RFID_VITURAL_1);
+    mod1.setPins(RFID_VITURAL_1, &R1_SER);
+  }
+  else{
+    mod1.setPins(R1_DET, &R1_SER);
   }
   
   nod1.setRfidModule(&mod1);
@@ -139,10 +146,12 @@ void setup()
   nodes[0] = &nod1;
 
   //set rfid module 2
-  mod2.setPins(R2_DET, &R2_SER);
   if(mod2.isVirtual())
   {
-	  mod2.setKey(RFID_VITURAL_2);
+    mod2.setPins(RFID_VITURAL_2, &R2_SER);
+  }
+  else{
+    mod2.setPins(R2_DET, &R2_SER);
   }
   nod2.setRfidModule(&mod2);
 
@@ -180,8 +189,13 @@ void setup()
   nodes[0] = &nod1;
 
   //set rfid module 2
-  mod2.setPins(R2_DET, &R2_SER);
-  nod2.setRfidModule(&mod2);
+  if(mod2.isVirtual())
+  {
+    mod2.setPins(RFID_VITURAL_2, &R2_SER);
+  }
+  else{
+    mod2.setPins(R2_DET, &R2_SER);
+  }
 
   //2p reader
   nod2.setrCode("ICCB", 0);

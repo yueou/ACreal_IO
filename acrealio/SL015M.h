@@ -14,7 +14,6 @@ public:
     byte isCardPresent();
     void getUID(byte* uid);
     bool isVirtual();
-    void setKey(byte key){};
 
 private:
     byte card;               // card presence

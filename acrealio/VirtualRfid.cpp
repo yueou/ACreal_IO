@@ -7,34 +7,40 @@ VirtualRfid::VirtualRfid()
     rfcmdsent = false;
     pinset = false;
     readcmd = false;
-	
-	//Read card uid
-	uid[0]= CARD_1_A;		
-	uid[1]= CARD_1_B;
-	uid[2]= CARD_1_C;
-	uid[3]= CARD_1_D;
-	uid[4]= CARD_1_E;
-	uid[5]= CARD_1_F;
-	uid[6]= CARD_1_G;
-	uid[7]= CARD_1_H;
 }
 
 void VirtualRfid::setPins(int sensor, HardwareSerial* serialid)
 {   
-    rfSENSOR = sensor;
-    rfSerial = serialid;
+    key = sensor;
+    pinMode(key,INPUT);      //Virtual card pin
+    digitalWrite(key, HIGH);
 
-    pinMode(rfSENSOR,INPUT);                            // Rfid sensor
-    rfSerial->begin(RFID_BAUD);
+    //Read card uid
+    char* cUID;
+    byte buf;
+    
+    if(key == RFID_VITURAL_1)
+      cUID= CARD_1;
+    else
+      cUID= CARD_2;
+
+    for (int i = 0;  i < 16; i++) {
+      byte c = cUID[i];
+      if(c > 64 && c < 71)
+        c -= 55;
+      else if(c > 96 && c < 103)
+        c -= 87;
+      else if(c > 47 && c < 58)
+        c -= 48;
+      if(i%2 == 0)
+        buf = c<<4;
+      else{
+        buf |= c;
+        uid[i/2] = buf;
+      }
+    }
     
     pinset=true;
-}
-
-void VirtualRfid::setKey(byte key){
-	
-    pinMode(key,INPUT);			//Virtual card pin
-    digitalWrite(key, HIGH);
-	this->key = key;
 }
 
 void VirtualRfid::update()

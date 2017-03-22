@@ -14,7 +14,6 @@ public:
     byte isCardPresent();
     void getUID(byte* uid);
     bool isVirtual();
-    void setKey(byte key){};
 private:
     void sendCmd(byte* cmd);
     boolean cmdUpdate();
