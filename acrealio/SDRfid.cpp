@@ -7,7 +7,6 @@ SDRfid::SDRfid()
     rfcmdsent = false;
     pinset = false;
     readcmd = false;
-    readfile = false;
 }
 
 void SDRfid::setPins(int sensor, HardwareSerial* serialid)
@@ -54,6 +53,8 @@ void SDRfid::update()
             c -= 87;
           else if(c > 47 && c < 58)
             c -= 48;
+          else
+            break;
           if(i%2 == 0)
             buf = c<<4;
           else{

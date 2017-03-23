@@ -196,6 +196,7 @@ void setup()
   else{
     mod2.setPins(R2_DET, &R2_SER);
   }
+  nod2.setRfidModule(&mod2);
 
   //2p reader
   nod2.setrCode("ICCB", 0);
