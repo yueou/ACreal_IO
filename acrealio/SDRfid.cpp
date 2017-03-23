@@ -55,11 +55,12 @@ void SDRfid::update()
             c -= 48;
           else
             break;
-          if(i%2 == 0)
+          
+          if(!(i&1))
             buf = c<<4;
           else{
             buf |= c;
-            uid[i/2] = buf;
+            uid[i>>1] = buf;
           }
         }
         
