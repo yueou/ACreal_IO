@@ -39,7 +39,7 @@
 #define BT_D A5
 #define BT_START 46
 #define BT_TEST 48
-#define BT_SVC 54
+#define BT_SVC 36
 
 //input pins for volume encoders (phase A and phase B for each)
 #define VOLR_A 38
